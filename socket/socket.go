@@ -85,7 +85,7 @@ type (
 	Socket struct {
 		*socket.StrictEventEmitter
 
-		nsp    *Namespace
+		nsp    Namespace
 		client *Client
 
 		// An unique identifier for the session.
@@ -145,7 +145,7 @@ func MakeSocket() *Socket {
 	return s
 }
 
-func NewSocket(nsp *Namespace, client *Client, auth any, previousSession *Session) *Socket {
+func NewSocket(nsp Namespace, client *Client, auth any, previousSession *Session) *Socket {
 	s := MakeSocket()
 
 	s.Construct(nsp, client, auth, previousSession)
@@ -200,7 +200,7 @@ func (s *Socket) Acks() *types.Map[uint64, func([]any, error)] {
 	return s.acks
 }
 
-func (s *Socket) Nsp() *Namespace {
+func (s *Socket) Nsp() Namespace {
 	return s.nsp
 }
 
@@ -208,7 +208,7 @@ func (s *Socket) Client() *Client {
 	return s.client
 }
 
-func (s *Socket) Construct(nsp *Namespace, client *Client, auth any, previousSession *Session) {
+func (s *Socket) Construct(nsp Namespace, client *Client, auth any, previousSession *Session) {
 	s.nsp = nsp
 	s.client = client
 
@@ -643,7 +643,7 @@ func (s *Socket) _onclose(args ...any) *Socket {
 // Makes the socket leave all the rooms it was part of and prevents it from joining any other room
 func (s *Socket) _cleanup() {
 	s.leaveAll()
-	s.nsp.remove(s)
+	s.nsp.Remove(s)
 	s.canJoin.Store(false)
 }
 

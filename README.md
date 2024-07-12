@@ -1,14 +1,14 @@
 # socket.io for golang
 
-[![Build Status](https://github.com/zishang520/socket.io/workflows/Go/badge.svg?branch=main)](https://github.com/zishang520/socket.io/actions)
-[![GoDoc](https://pkg.go.dev/badge/github.com/zishang520/socket.io/v2?utm_source=godoc)](https://pkg.go.dev/github.com/zishang520/socket.io/v2)
+[![Build Status](https://github.com/zishang520/socket.io-server-go-fasthttp/workflows/Go/badge.svg?branch=main)](https://github.com/zishang520/socket.io-server-go-fasthttp/actions)
+[![GoDoc](https://pkg.go.dev/badge/github.com/zishang520/socket.io-server-go-fasthttp/v2?utm_source=godoc)](https://pkg.go.dev/github.com/zishang520/socket.io-server-go-fasthttp/v2)
 
 ## Features
 
 Socket.IO enables real-time bidirectional event-based communication. It consists of:
 
 - **Support Socket.IO v4+ 🚀🚀🚀**
-- a Golang server (this repository)
+- a Golang fasthttp server (this repository)
 - a [Javascript client library](https://github.com/socketio/socket.io-client) for the browser (or a Node.js client)
 
 Some implementations in other languages are also available:
@@ -28,7 +28,7 @@ Connections are established even in the presence of:
   - proxies and load balancers.
   - personal firewall and antivirus software.
 
-For this purpose, it relies on [Engine.IO for golang](https://github.com/zishang520/engine.io), which first establishes a long-polling connection, then tries to upgrade to better transports that are "tested" on the side, like WebSocket. Please see the [Goals](https://github.com/zishang520/engine.io#goals) section for more information.
+For this purpose, it relies on [Engine.IO for golang](https://github.com/zishang520/engine.io-server-go-fasthttp/v2), which first establishes a long-polling connection, then tries to upgrade to better transports that are "tested" on the side, like WebSocket. Please see the [Goals](https://github.com/zishang520/engine.io-server-go-fasthttp#goals) section for more information.
 
 #### Auto-reconnection support
 
@@ -53,7 +53,7 @@ Sample code:
 
 ```golang
 import (
-    "github.com/zishang520/socket.io/v2/socket"
+    "github.com/zishang520/socket.io-server-go-fasthttp/v2/socket"
 )
 io.On("connection", func(clients ...any) {
     client := clients[0].(*socket.Socket)
@@ -84,12 +84,12 @@ The following example attaches socket.io to a plain engine.io *types.CreateServe
 package main
 
 import (
-    "github.com/zishang520/engine.io/v2/types"
-    "github.com/zishang520/engine.io/v2/utils"
-    "github.com/zishang520/socket.io/v2/socket"
     "os"
     "os/signal"
     "syscall"
+
+    "github.com/zishang520/engine.io-server-go-fasthttp/v2/types"
+    "github.com/zishang520/socket.io-server-go-fasthttp/v2/socket"
 )
 
 func main() {
@@ -122,24 +122,25 @@ func main() {
     httpServer.Close(nil)
     os.Exit(0)
 }
+
 ```
-other: Use [http.Handler](https://pkg.go.dev/net/http#Handler) interface
+other: Use [types.Handler](https://pkg.go.dev/github.com/zishang520/engine.io-server-go-fasthttp/v2/types#Handler) interface
 ```golang
 package main
 
 import (
-    "net/http"
     "os"
     "os/signal"
     "syscall"
 
-    "github.com/zishang520/socket.io/v2/socket"
+    "github.com/valyala/fasthttp"
+    "github.com/zishang520/socket.io-server-go-fasthttp/v2/socket"
 )
 
 func main() {
     io := socket.NewServer(nil, nil)
-    http.Handle("/socket.io/", io.ServeHandler(nil))
-    go http.ListenAndServe(":3000", nil)
+
+    go fasthttp.ListenAndServe(":3000", io.ServeHandler(nil).FastHTTP)
 
     io.On("connection", func(clients ...any) {
         client := clients[0].(*socket.Socket)
@@ -172,7 +173,7 @@ func main() {
 
 ## Documentation
 
-Please see the documentation [here](https://pkg.go.dev/github.com/zishang520/socket.io/v2).
+Please see the documentation [here](https://pkg.go.dev/github.com/zishang520/socket.io-server-go-fasthttp/v2).
 
 ## Debug / logging
 
@@ -184,6 +185,10 @@ To see the output from all of Socket.IO's debugging scopes you can use:
 ```
 DEBUG=socket.io*
 ```
+
+## Transports
+
+- `websocket`: WebSocket transport.
 
 ## Testing
 
