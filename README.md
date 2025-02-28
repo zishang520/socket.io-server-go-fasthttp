@@ -1,4 +1,4 @@
-# socket.io for golang
+# socket.io for golang (Due to the update of related components, the project has been archived, please use https://github.com/zishang520/socket.io)
 
 [![Build Status](https://github.com/zishang520/socket.io-server-go-fasthttp/workflows/Go/badge.svg?branch=main)](https://github.com/zishang520/socket.io-server-go-fasthttp/actions)
 [![GoDoc](https://pkg.go.dev/badge/github.com/zishang520/socket.io-server-go-fasthttp/v2?utm_source=godoc)](https://pkg.go.dev/github.com/zishang520/socket.io-server-go-fasthttp/v2)
